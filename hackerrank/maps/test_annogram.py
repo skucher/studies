@@ -1,24 +1,25 @@
 import pytest
+from math import factorial
 
 def annogram(s):
-    subs = set()
-    count = 0
+    subs = {}
     for start in range(len(s)+1):
         for end in range(start+1,len(s)+1):
             curr_s = ''.join(sorted(s[start:end]))
-            print(curr_s)
-            if curr_s in subs:
-                count += 1
-            else:
-                subs.add(curr_s)
-    return count
+            subs[curr_s] = subs.setdefault(curr_s, 0) + 1
+    
+    def pairs_of(count):
+        if count < 2: return 0
+        fact = factorial(count)
+        return fact / (factorial(count - 2) * 2)
+
+
+    counts = (pairs_of(v) for v in subs.values())
+    return sum(counts)
 
     
 
 def test_simple():
-    res = annogram('abba')
-    assert 4 == res
-
-def test_fail():
-    res = annogram('cdcd')
-    assert 5 == res
+    assert 4 == annogram('abba')
+    assert 10 == annogram('dddd')
+    assert 5 == annogram('cdcd')
